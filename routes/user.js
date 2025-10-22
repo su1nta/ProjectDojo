@@ -1,9 +1,13 @@
 import { Router } from "express";
-import z, { email } from "zod";
-import mongoose from "mongoose";
+import { z } from "zod";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { errorLogger } from "../config";
+import { errorLogger } from "../config.js";
+import { UserModel } from "../db.js";
+import userAuth from "../middleware/user.auth.js";
+import 'dotenv/config';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const userRouter = Router();
 userRouter.get('/', async (req, res) => {
@@ -14,36 +18,33 @@ userRouter.get('/', async (req, res) => {
 // user signup
 userRouter.post('/signup', async (req, res) => {
   // signup endpoint
-  const email = req.body.email;
-  const username = req.body.username;
-  const password = req.body.password;
 
   const signupBody = {
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
-    role: req.user.role
+    role: req.body.role
+  }
+
+  if (!signupBody.role || signupBody.role != "user") {
+    res.status(403).json({
+      error: "Invalid role, you're an user right?"
+    });
+    return;
   }
 
   const signupValidationSchema = z.object({
     email: z.email(),
     username: z.string().min(3).max(20),
-    password: z.string()
-      .min(8, { message: "Password must be at least 8 characters long" })
-      .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
-      .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-      .regex(/[0-9]/, { message: "Password must contain at least one number" })
-      .regex(/[^A-Za-z0-9]/, { message: "Password must contain at least one special character" }),
-    role: z.enum(["user"], {
-      error: "Role must be user"
-    })
+    password: z.string().min(8).regex(/^(?=.*[A-Z]).{8,}$/, { error: "Invalid Password" }),
+    role: z.string()
   })
   const signupParse = signupValidationSchema.safeParse(signupBody);
   if (!signupParse.success) {
     res.status(400).json({ error: "Invalid format" })
     return;
   }
-  const foundUser = await userModel.findOne({
+  const foundUser = await UserModel.findOne({
     $or: [
       { email: signupBody.email },
       { username: signupBody.username }
@@ -57,12 +58,11 @@ userRouter.post('/signup', async (req, res) => {
     return;
   }
   try {
-    const hashedPassword = bcrypt.hash(signupBody.password, 5);
+    const hashedPassword = await bcrypt.hash(signupBody.password, 5);
     await UserModel.create({
       email: signupBody.email,
       username: signupBody.username,
-      password: hashedPassword,
-      role: signupBody.role
+      password: hashedPassword
     });
     res.status(200).json({
       msg: "You are signed up"
@@ -80,18 +80,22 @@ userRouter.post('/signin', async (req, res) => {
     email: req.body.email,
     username: req.body.username,
     password: req.body.password,
-    role: req.user.role
+    role: req.body.role
+  }
+
+  if (!signinBody.role || signinBody.role != "user") {
+    res.status(403).json({
+      error: "You are an user right?"
+    });
+    return;
   }
   const signinValidationSchema = z.object({
     email: z.email().optional(),
     username: z.string().min(3).max(20).optional(),
     password: z.string()
       .min(8)
-      .regex(/[A-Z]/)
-      .regex(/[a-z]/)
-      .regex(/[0-9]/)
-      .regex(/[^A-za-z0-9]/),
-    role: z.enum("user")
+      .regex(/^(?=.*[A-Z]).{8,}$/, { error: "Invalid Password" }),
+    role: z.string()
   });
 
   const signinParse = signinValidationSchema.safeParse(signinBody);
@@ -102,8 +106,10 @@ userRouter.post('/signin', async (req, res) => {
     return;
   }
   const foundUser = await UserModel.findOne({
-    email: signinBody.email,
-    username: signinBody.username
+    $or: [
+      { email: signinBody.email },
+      { username: signinBody.username }
+    ]
   });
   if (!foundUser) {
     res.status(400).json({
@@ -111,7 +117,7 @@ userRouter.post('/signin', async (req, res) => {
     });
     return;
   }
-  const passwordMatches = bcrypt.verify(signinBody.password, foundUser.password);
+  const passwordMatches = await bcrypt.compare(signinBody.password, foundUser.password);
   if (!passwordMatches) {
     res.status(401).json({
       error: "Invalid credentials"
@@ -124,7 +130,8 @@ userRouter.post('/signin', async (req, res) => {
   const token = jwt.sign({
     id: foundUser._id.toString(),
     email: foundUser.email,
-    username: foundUser.UserModel
+    username: foundUser.username,
+    role: "user"
   }, JWT_SECRET);
 
   res.setHeader("Authorization", token);
@@ -135,8 +142,9 @@ userRouter.post('/signin', async (req, res) => {
 
 userRouter.get('/me', userAuth, async (req, res) => {
   // send signedin user details
-  const { email, username } = req.user;
+  const { id, email, username } = req.user;
   res.status(200).json({
+    id: id,
     email: email,
     username: username
   });

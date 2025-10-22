@@ -17,6 +17,6 @@ export default function userAuth(req, res, next) {
     });
     return;
   }
-  res.user = userData;
+  req.user = userData;
   next();
 }
