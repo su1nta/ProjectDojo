@@ -1,12 +1,13 @@
 import { Router } from "express";
 import z from "zod";
-import { AdminModel, CourseModel } from "../db";
+import { AdminModel, CourseModel } from "../db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import 'dotenv/config';
-import { errorLogger } from "../config";
+import { errorLogger } from "../config.js";
 import chalk from 'chalk';
 import mongoose from "mongoose";
+import adminAuth from "../middleware/admin.auth.js";
 
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
 const adminRouter = Router();
@@ -15,6 +16,60 @@ adminRouter.get('/', async (req, res) => {
   res.send(`Reached ${req.originalUrl}, Method ${req.method}`);
 })
 
+adminRouter.post('/signup', async (req, res) => {
+  const signupBody = {
+    email: req.body.email,
+    username: req.body.username,
+    password: req.body.password,
+    role: req.body.role
+  };
+
+  const signupSchema = z.object({
+    email: z.email(),
+    username: z.string().min(3),
+    password: z.string().min(8)
+      .regex(/^(?=.*[A-Z]).{8,}$/, { error: "Invalid Password" })
+  });
+  const signupParse = signupSchema.safeParse(signupBody);
+  if (!signupParse.success) {
+    res.status(400).json({
+      error: "Invalid format"
+    });
+    return;
+  }
+
+  const foundAdmin = await AdminModel.findOne({
+    $or: [
+      { email: signupBody.email },
+      { username: signupBody.username }
+    ]
+  });
+
+  if (foundAdmin) {
+    res.status(400).json({
+      error: "Admin with this credentials already exists"
+    });
+    return;
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(signupBody.password, 5);
+    const status = await AdminModel.create({
+      email: signupBody.email,
+      username: signupBody.username,
+      password: hashedPassword
+    });
+    if (!status) {
+      res.status(400).json({
+        error: "Cannot create Admin right now"
+      });
+      return;
+    }
+    res.status(200).json({
+      msg: "Admin created successfully"
+    })
+  } catch (err) { }
+})
 adminRouter.post('/signin', async (req, res) => {
   // sign admin in
   const signinBody = {
@@ -32,8 +87,8 @@ adminRouter.post('/signin', async (req, res) => {
   }
 
   const signinSchema = z.object({
-    email: z.email(),
-    username: z.string().min(3),
+    email: z.email().optional(),
+    username: z.string().min(3).optional(),
     password: z.string().min(8)
       .regex(/^(?=.*[A-Z]).{8,}$/, { error: "Invalid Password" })
   })
@@ -72,7 +127,7 @@ adminRouter.post('/signin', async (req, res) => {
       id: foundUser._id,
       email: foundUser.email,
       username: foundUser.username,
-      role: foundUser.role
+      role: signinBody.role
     }, ADMIN_JWT_SECRET);
 
     res.setHeader("Authorization", token);
@@ -89,7 +144,7 @@ adminRouter.post('/signin', async (req, res) => {
 adminRouter.post('/course', adminAuth, async (req, res) => {
   // add a course
   const addCourseBody = {
-    creatorId: new mongoose.Schema.ObjectId(req.user.id),
+    creatorId: new mongoose.Types.ObjectId(req.user.id),
     title: req.body.title,
     description: req.body.description,
     price: req.body.price,
@@ -101,7 +156,7 @@ adminRouter.post('/course', adminAuth, async (req, res) => {
     title: z.string().min(5),
     description: z.string().min(5),
     price: z.number(),
-    imagrUrl: z.url()
+    imagrUrl: z.url().optional()
   });
 
   const addCourseParse = addCourseSchema.safeParse(addCourseBody);
@@ -139,10 +194,10 @@ adminRouter.put('/course/:id', adminAuth, async (req, res) => {
   }
 
   const courseUpdateSchema = z.object({
-    title: z.string().min(5),
-    description: z.string().min(5),
-    price: z.number(),
-    imageUrl: z.url()
+    title: z.string().min(5).optional(),
+    description: z.string().min(5).optional(),
+    price: z.number().optional(),
+    imageUrl: z.url().optional()
   });
   const courseUpdateParse = courseUpdateSchema.safeParse(courseUpdateBody);
   if (!courseUpdateParse.success) {

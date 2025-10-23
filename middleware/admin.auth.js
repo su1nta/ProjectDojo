@@ -1,7 +1,7 @@
 
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-const ADMIN_JWT_SECRET = process.env.JWT_SECRET;
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
 
 export default function adminAuth(req, res, next) {
   const token = req.headers.authorization;
