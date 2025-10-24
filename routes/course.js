@@ -21,7 +21,25 @@ courseRouter.get('/explore', async (req, res) => {
 
 courseRouter.get('/', userAuth, async (req, res) => {
   // show user's bought courses
+  const user = req.user;
+  if (user.role != "user") {
+    res.status(400).json({
+      error: "Please sign in as an user"
+    });
+    return;
+  }
 
+  try {
+    const purchasedCourses = await PurchaseModel.find({ userId: user.id })
+      .populate("courseId");
+    if (!purchasedCourses) {
+      res.status(404).json({
+        error: "No purchased courses"
+      });
+      return;
+    }
+    res.status(200).json(purchasedCourses);
+  } catch (err) { errorLogger(req, res, err) }
 });
 
 courseRouter.post('/:id/purchase', userAuth, async (req, res) => {
@@ -43,12 +61,10 @@ courseRouter.post('/:id/purchase', userAuth, async (req, res) => {
       });
       return;
     }
-    console.log(foundCourse);
     const status = await PurchaseModel.create({
       userId: userId,
       courseId: foundCourse.id
     });
-    console.log(status);
     if (!status) {
       res.status(400).json({
         error: "cannot add purchase"
@@ -60,7 +76,7 @@ courseRouter.post('/:id/purchase', userAuth, async (req, res) => {
       msg: "Course Purchased",
       course: foundCourse
     })
-  } catch (err) { }
+  } catch (err) { errorLogger(req, res, err); }
 })
 
 courseRouter.post('/:id/content', async (req, res) => {

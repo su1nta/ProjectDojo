@@ -15,7 +15,7 @@ const AdminSchema = new Schema({
 });
 
 const CourseSchema = new Schema({
-  creatorId: ObjectId,
+  creatorId: { type: ObjectId, ref: 'admins' },
   title: String,
   description: String,
   price: Number,
@@ -23,8 +23,8 @@ const CourseSchema = new Schema({
 });
 
 const PurchaseSchema = new Schema({
-  userId: ObjectId,
-  courseId: ObjectId
+  userId: { type: ObjectId, ref: 'users' },
+  courseId: { type: ObjectId, ref: 'courses' }
 })
 
 export const UserModel = mongoose.model('users', UserSchema);
