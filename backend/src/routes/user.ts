@@ -6,6 +6,14 @@ import { errorLogger } from "../config.js";
 import { UserModel } from "../db.js";
 import userAuth from "../middleware/user.auth.js";
 import "dotenv/config";
+import { fa } from "zod/locales";
+
+// api response format
+// {
+//     sucess: boolean,
+//     message: string,
+//     data: [] | null
+// }
 
 const jwt_env = process.env.JWT_SECRET;
 if (!jwt_env) {
@@ -32,7 +40,9 @@ userRouter.post("/signup", async (req, res) => {
 
     if (!signupBody.role || signupBody.role != "user") {
         res.status(403).json({
-            error: "Invalid role, you're an user right?",
+            success: false,
+            message: "Invalid role, you're an user right?",
+            data: null,
         });
         return;
     }
@@ -48,7 +58,11 @@ userRouter.post("/signup", async (req, res) => {
     });
     const signupParse = signupValidationSchema.safeParse(signupBody);
     if (!signupParse.success) {
-        res.status(400).json({ error: "Invalid format" });
+        res.status(400).json({
+            success: false,
+            message: "Invalid format",
+            data: null,
+        });
         return;
     }
     const foundUser = await UserModel.findOne({
@@ -57,7 +71,9 @@ userRouter.post("/signup", async (req, res) => {
 
     if (foundUser) {
         res.status(400).json({
-            error: "user already exists",
+            success: false,
+            message: "user already exists",
+            data: null,
         });
         return;
     }
@@ -69,7 +85,9 @@ userRouter.post("/signup", async (req, res) => {
             password: hashedPassword,
         });
         res.status(200).json({
-            msg: "You are signed up",
+            success: true,
+            message: "You are signed up",
+            data: null,
         });
     } catch (err) {
         if (err) {
@@ -91,7 +109,9 @@ userRouter.post("/signin", async (req, res) => {
 
     if (!signinBody.role || signinBody.role != "user") {
         res.status(403).json({
-            error: "You are an user right?",
+            success: false,
+            message: "You are an user right?",
+            data: null,
         });
         return;
     }
@@ -108,7 +128,9 @@ userRouter.post("/signin", async (req, res) => {
     const signinParse = signinValidationSchema.safeParse(signinBody);
     if (!signinParse.success) {
         res.status(400).json({
-            error: "Invalid format",
+            success: false,
+            message: "Invalid format",
+            data: null,
         });
         return;
     }
@@ -117,14 +139,18 @@ userRouter.post("/signin", async (req, res) => {
     });
     if (!foundUser) {
         res.status(400).json({
-            error: "User not found",
+            success: false,
+            message: "User not found",
+            data: null,
         });
         return;
     }
     const storedPassword = foundUser.password;
     if (!storedPassword) {
         res.status(500).json({
-            error: "Stored password unavailable",
+            success: false,
+            message: "Stored password unavailable",
+            data: null,
         });
         return;
     }
@@ -134,7 +160,9 @@ userRouter.post("/signin", async (req, res) => {
     );
     if (!passwordMatches) {
         res.status(401).json({
-            error: "Invalid credentials",
+            success: false,
+            message: "Invalid credentials",
+            data: null,
         });
         return;
     }
@@ -152,7 +180,9 @@ userRouter.post("/signin", async (req, res) => {
 
     res.setHeader("Authorization", token);
     res.status(200).json({
-        msg: "You are signed in",
+        success: true,
+        message: "You are signed in",
+        data: null,
     });
 });
 
@@ -160,15 +190,23 @@ userRouter.get("/me", userAuth, async (req, res) => {
     // send signedin user details
     if (!req.user) {
         res.status(400).json({
-            error: "user not found",
+            success: false,
+            message: "user not found",
+            data: null,
         });
         return;
     }
     const { id, email, username } = req.user;
     res.status(200).json({
-        id: id,
-        email: email,
-        username: username,
+        success: true,
+        message: "user found",
+        data: [
+            {
+                id: id,
+                email: email,
+                username: username,
+            },
+        ],
     });
 });
 

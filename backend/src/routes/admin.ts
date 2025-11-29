@@ -39,7 +39,9 @@ adminRouter.post("/signup", async (req, res) => {
     const signupParse = signupSchema.safeParse(signupBody);
     if (!signupParse.success) {
         res.status(400).json({
-            error: "Invalid format",
+            success: false,
+            message: "Invalid format",
+            data: null,
         });
         return;
     }
@@ -50,7 +52,9 @@ adminRouter.post("/signup", async (req, res) => {
 
     if (foundAdmin) {
         res.status(400).json({
-            error: "Admin with this credentials already exists",
+            success: false,
+            message: "Admin with this credentials already exists",
+            data: null,
         });
         return;
     }
@@ -64,12 +68,16 @@ adminRouter.post("/signup", async (req, res) => {
         });
         if (!status) {
             res.status(400).json({
-                error: "Cannot create Admin right now",
+                success: false,
+                message: "Cannot create Admin right now",
+                data: null,
             });
             return;
         }
         res.status(200).json({
-            msg: "Admin created successfully",
+            success: true,
+            message: "Admin created successfully",
+            data: null,
         });
     } catch (err) {}
 });
@@ -84,7 +92,9 @@ adminRouter.post("/signin", async (req, res) => {
 
     if (!signinBody.role || signinBody.role != "admin") {
         res.status(403).json({
-            error: "Access Denied",
+            success: false,
+            message: "Access Denied",
+            data: null,
         });
         return;
     }
@@ -101,7 +111,9 @@ adminRouter.post("/signin", async (req, res) => {
     const signinParse = signinSchema.safeParse(signinBody);
     if (!signinParse.success) {
         res.status(400).json({
-            error: "Invalid format",
+            success: false,
+            message: "Invalid format",
+            data: null,
         });
         return;
     }
@@ -115,7 +127,9 @@ adminRouter.post("/signin", async (req, res) => {
         });
         if (!foundUser) {
             res.status(403).json({
-                error: "Admin not found",
+                success: false,
+                message: "Admin not found",
+                data: null,
             });
             return;
         }
@@ -123,7 +137,9 @@ adminRouter.post("/signin", async (req, res) => {
         const storedPassword = foundUser.password;
         if (!storedPassword) {
             res.status(400).json({
-                error: "invalid credentials",
+                success: false,
+                message: "invalid credentials",
+                data: null,
             });
             return;
         }
@@ -134,7 +150,9 @@ adminRouter.post("/signin", async (req, res) => {
         );
         if (!status) {
             res.status(403).json({
-                error: "Invalid username or password",
+                success: false,
+                message: "Invalid username or password",
+                data: null,
             });
             return;
         }
@@ -151,7 +169,9 @@ adminRouter.post("/signin", async (req, res) => {
 
         res.setHeader("Authorization", token);
         res.status(200).json({
-            msg: "Admin Signed in",
+            success: true,
+            message: "Admin Signed in",
+            data: null,
         });
     } catch (err) {
         if (err) {
@@ -165,7 +185,9 @@ adminRouter.post("/course", adminAuth, async (req, res) => {
     // add a course
     if (!req.user) {
         res.status(400).json({
-            error: "user not found",
+            success: false,
+            message: "user not found",
+            data: null,
         });
         return;
     }
@@ -188,7 +210,9 @@ adminRouter.post("/course", adminAuth, async (req, res) => {
     const addCourseParse = addCourseSchema.safeParse(addCourseBody);
     if (!addCourseParse.success) {
         res.status(400).json({
-            error: "Invalid format",
+            success: false,
+            message: "Invalid format",
+            data: null,
         });
         return;
     }
@@ -196,7 +220,9 @@ adminRouter.post("/course", adminAuth, async (req, res) => {
     try {
         await CourseModel.create(addCourseBody);
         res.status(200).json({
-            msg: "Course Added",
+            success: true,
+            message: "Course Added",
+            data: null,
         });
     } catch (err) {
         if (err) {

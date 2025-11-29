@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { CourseModel, PurchaseModel } from "../db.js";
 import { errorLogger } from "../config.js";
 import userAuth from "../middleware/user.auth.js";
+import { success } from "zod";
 
 const courseRouter = Router();
 courseRouter.get("/explore", async (req, res) => {
@@ -11,11 +12,17 @@ courseRouter.get("/explore", async (req, res) => {
         const response = await CourseModel.find({});
         if (!response) {
             res.status(404).json({
-                error: "No courses",
+                success: false,
+                message: "No courses",
+                data: null,
             });
             return;
         }
-        res.status(200).json(response);
+        res.status(200).json({
+            success: true,
+            message: "Fetched All courses",
+            data: [response],
+        });
     } catch (err) {
         if (err) {
             const error = String(err);
@@ -29,13 +36,17 @@ courseRouter.get("/", userAuth, async (req, res) => {
     const user = req.user;
     if (!user) {
         res.status(400).json({
-            error: "user is not defined",
+            success: false,
+            message: "user is not defined",
+            data: null,
         });
         return;
     }
     if (user.role != "user") {
         res.status(400).json({
-            error: "Please sign in as an user",
+            success: false,
+            message: "Please sign in as an user",
+            data: null,
         });
         return;
     }
@@ -46,11 +57,17 @@ courseRouter.get("/", userAuth, async (req, res) => {
         }).populate("courseId");
         if (!purchasedCourses) {
             res.status(404).json({
-                error: "No purchased courses",
+                success: false,
+                message: "No purchased courses",
+                data: null,
             });
             return;
         }
-        res.status(200).json(purchasedCourses);
+        res.status(200).json({
+            success: true,
+            message: "Fetched all purchased courses",
+            data: [purchasedCourses],
+        });
     } catch (err) {
         if (err) {
             const error = String(err);
@@ -64,13 +81,17 @@ courseRouter.post("/:id/purchase", userAuth, async (req, res) => {
     const { id } = req.params;
     if (!req.user) {
         res.status(400).json({
-            error: "user not defined",
+            success: false,
+            message: "user not defined",
+            data: null,
         });
         return;
     }
     if (req.user.role != "user") {
         res.status(403).json({
-            error: "Please sign in as an user",
+            success: false,
+            message: "Please sign in as an user",
+            data: null,
         });
         return;
     }
@@ -80,7 +101,9 @@ courseRouter.post("/:id/purchase", userAuth, async (req, res) => {
         const foundCourse = await CourseModel.findById(id);
         if (!foundCourse) {
             res.status(404).json({
-                error: "Course not found",
+                success: false,
+                message: "Course not found",
+                data: null,
             });
             return;
         }
@@ -90,14 +113,17 @@ courseRouter.post("/:id/purchase", userAuth, async (req, res) => {
         });
         if (!status) {
             res.status(400).json({
-                error: "cannot add purchase",
+                success: false,
+                message: "cannot add purchase",
+                data: null,
             });
             return;
         }
 
         res.status(200).json({
-            msg: "Course Purchased",
-            course: foundCourse,
+            success: true,
+            message: "Course Purchased",
+            data: [foundCourse],
         });
     } catch (err) {
         if (err) {
