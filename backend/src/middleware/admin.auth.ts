@@ -20,7 +20,9 @@ function adminAuth(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization;
     if (!token) {
         res.status(403).json({
-            error: "Please Sign in",
+            success: false,
+            message: "Please Sign in",
+            data: null,
         });
         return;
     }
@@ -28,13 +30,17 @@ function adminAuth(req: Request, res: Response, next: NextFunction) {
     const adminData = decoded as AdminPayload;
     if (!adminData) {
         res.status(403).json({
-            error: "Invalid user token",
+            success: false,
+            message: "Invalid user token",
+            data: null,
         });
         return;
     }
     if (adminData.role != "admin") {
         res.status(403).json({
-            error: "Please sign in as Admin",
+            success: false,
+            message: "Please sign in as Admin",
+            data: null,
         });
         return;
     }

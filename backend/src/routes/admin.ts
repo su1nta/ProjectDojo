@@ -237,7 +237,9 @@ adminRouter.put("/course/:id", adminAuth, async (req, res) => {
     const { id } = req.params;
     if (!id) {
         res.status(400).json({
-            error: "Course ID missing",
+            success: false,
+            message: "Course ID missing",
+            data: null,
         });
         return;
     }
@@ -257,7 +259,9 @@ adminRouter.put("/course/:id", adminAuth, async (req, res) => {
     const courseUpdateParse = courseUpdateSchema.safeParse(courseUpdateBody);
     if (!courseUpdateParse.success) {
         res.status(400).json({
-            error: "Invalid format",
+            success: false,
+            message: "Invalid format",
+            data: null,
         });
         return;
     }
@@ -266,7 +270,9 @@ adminRouter.put("/course/:id", adminAuth, async (req, res) => {
         const foundCourse = await CourseModel.findById(id);
         if (!foundCourse) {
             res.status(404).json({
-                error: "Course not found",
+                success: false,
+                message: "Course not found",
+                data: null,
             });
             return;
         }
@@ -277,13 +283,16 @@ adminRouter.put("/course/:id", adminAuth, async (req, res) => {
         );
         if (!updatedCourse) {
             res.status(404).json({
-                error: "Course not found",
+                success: false,
+                message: "Course not found",
+                data: null,
             });
             return;
         }
         res.status(200).json({
-            msg: "Course updated successfully",
-            course: updatedCourse,
+            success: true,
+            message: "Course updated successfully",
+            data: [updatedCourse],
         });
     } catch (err) {
         if (err) {
@@ -306,7 +315,9 @@ adminRouter.delete("/course/:id", adminAuth, async (req, res) => {
     const { id } = req.params;
     if (!id) {
         res.status(400).json({
-            error: "Course Id not found",
+            success: false,
+            message: "Course Id not found",
+            data: null,
         });
         return;
     }
@@ -314,12 +325,16 @@ adminRouter.delete("/course/:id", adminAuth, async (req, res) => {
         const deletedCourse = await CourseModel.findByIdAndDelete(id);
         if (!deletedCourse) {
             res.status(404).json({
-                error: "Course not found",
+                success: false,
+                message: "Course not found",
+                data: null,
             });
             return;
         }
         res.status(200).json({
-            msg: "Course Deleted",
+            success: true,
+            message: "Course Deleted",
+            data: null,
         });
     } catch (err) {
         if (err) {

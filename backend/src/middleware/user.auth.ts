@@ -22,7 +22,9 @@ export default function userAuth(
     const token = req.headers.authorization;
     if (!token) {
         res.status(403).json({
-            error: "Please Sign in",
+            success: false,
+            message: "Please Sign in",
+            data: null,
         });
         return;
     }
@@ -35,13 +37,17 @@ export default function userAuth(
         userData = decoded as UserPayload;
         if (!userData) {
             res.status(403).json({
-                error: "Invalid user token",
+                success: false,
+                message: "Invalid user token",
+                data: null,
             });
             return;
         }
     } catch (err) {
         res.status(403).json({
-            error: "Invalid user token",
+            success: false,
+            message: "Invalid user token",
+            data: null,
         });
         return;
     }
