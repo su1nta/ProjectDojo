@@ -7,7 +7,7 @@ type Props = {
 
 const Heading = (props: Props) => {
     return (
-        <div className="w-full max-w-6xl flex flex-col items-start justify-start px-5 mt-10">
+        <div className="w-full flex flex-col items-start justify-start px-5 mt-10">
             <h5 className="w-full font-jockey text-xl leading-tight tracking-widest text-black/45">
                 {props.subtitle}
             </h5>

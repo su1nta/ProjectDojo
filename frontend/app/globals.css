@@ -3,10 +3,11 @@
 :root {
     /* --background: #ffffff; */
     --foreground: #171717;
-    --primary: #d2dcb6;
+    --primary: #778873;
     --secondary: #a1bc98;
     --accent: #d2dcb6;
     --background: #f2f5e1;
+    --outline: #222222;
 }
 
 @theme inline {
@@ -19,4 +20,5 @@
     --color-secondary: var(--secondary);
     --color-accent: var(--accent);
     --color-background: var(--background);
+    --color-outline: var(--outline);
 }

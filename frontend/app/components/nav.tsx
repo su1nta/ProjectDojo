@@ -5,7 +5,7 @@ type Props = {};
 
 const Nav = (props: Props) => {
     return (
-        <div className="h-20 w-full max-w-6xl border-b border-primary/50 flex items-center justify-between">
+        <div className="h-20 w-full max-w-6xl border-x border-b border-accent/50 flex items-center justify-between">
             <div className="p-3 font-jockey text-3xl">
                 <Link href="/">ProjectDojo</Link>
             </div>
@@ -32,13 +32,13 @@ const Nav = (props: Props) => {
             <div className="p-3 flex gap-2">
                 <Link
                     href=""
-                    className="p-2 bg-accent hover:bg-accent/80 transition duration-200"
+                    className="py-2 px-6 bg-accent hover:bg-accent/80 transition duration-200"
                 >
                     Sign Up
                 </Link>
                 <Link
                     href=""
-                    className="p-2 bg-primary hover:bg-primary/80 transition duration-200"
+                    className="py-2 px-6 bg-secondary hover:bg-secondary/80 transition duration-200"
                 >
                     Sign In
                 </Link>

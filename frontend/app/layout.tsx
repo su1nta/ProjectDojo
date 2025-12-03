@@ -34,7 +34,16 @@ export default function RootLayout({
             <body
                 className={`${geistSans.variable} ${geistMono.variable} ${jockeyOne.variable} antialiased`}
             >
-                <div className="flex flex-col items-center bg-linear-to-b from-white via-background to-accent h-screen">
+                <div
+                    className="flex flex-col items-center"
+                    style={{
+                        background: `
+                            radial-gradient(circle at 1px 1px, rgba(34, 34, 34, 0.10) 1px, transparent 0),
+                            linear-gradient(to bottom, transparent, var(--accent))
+                        `,
+                        backgroundSize: "20px 20px, 100% 100%",
+                    }}
+                >
                     <Nav />
                     {children}
                 </div>
