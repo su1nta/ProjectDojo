@@ -7,7 +7,7 @@ const Nav = (props: Props) => {
     return (
         <div className="h-20 w-full max-w-6xl border-x border-b border-accent/50 flex items-center justify-between">
             <div className="p-3 font-jockey text-3xl">
-                <Link href="/">ProjectDojo</Link>
+                <Link href="/explore">ProjectDojo</Link>
             </div>
             <div className="p-3 flex gap-5">
                 <Link
