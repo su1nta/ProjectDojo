@@ -9,10 +9,10 @@ type Props = {};
 
 const FeedbackCard = (props: Props) => {
     return (
-        <div className=" w-full bg-background/40 h-160 flex items-center justify-center">
+        <div className=" w-full bg-zinc-100/20 h-160 flex items-center justify-center">
             <div className="h-3/5 w-3/5 border border-secondary">
-                <div className="h-1/4 bg-primary/80 flex items-center justify-center">
-                    <h2 className="text-7xl font-jockey text-accent/80">
+                <div className="h-1/4 bg-accent/50 flex items-center justify-center">
+                    <h2 className="text-7xl font-jockey text-secondary/60">
                         provide your feedback
                     </h2>
                 </div>
