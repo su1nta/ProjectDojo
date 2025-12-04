@@ -28,13 +28,13 @@ const CourseCard = (props: Props) => {
                     </div>
                     <div className="flex items-center justify-between mt-2">
                         <div className="flex gap-2 overflow-x-scroll w-3/4 max-w-3/4">
-                            <span className="px-2 py-1 text-xs border border-secondary/40 text-black/40">
+                            <span className="px-2 py-1 text-xs border border-secondary/40 hover:shadow-inner hover:shadow-primary/10 transition duration-200 text-black/40">
                                 Badge
                             </span>
-                            <span className="px-2 py-1 text-xs border border-secondary/40 text-black/40">
+                            <span className="px-2 py-1 text-xs border border-secondary/40 hover:shadow-inner hover:shadow-primary/10 transition duration-200 text-black/40">
                                 Badge
                             </span>
-                            <span className="px-2 py-1 text-xs border border-secondary/40 text-black/40">
+                            <span className="px-2 py-1 text-xs border border-secondary/40 hover:shadow-inner hover:shadow-primary/10 transition duration-200 text-black/40">
                                 Badge
                             </span>
                         </div>

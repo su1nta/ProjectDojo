@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-    subtitle: String;
+    subtitle?: String;
     title: String;
 };
 
