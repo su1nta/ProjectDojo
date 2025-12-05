@@ -12,7 +12,7 @@ const FeedbackCard = (props: Props) => {
         <div className=" w-full bg-zinc-100/20 h-160 flex items-center justify-center">
             <div className="h-3/5 w-3/5 border border-secondary">
                 <div className="h-1/4 bg-accent/50 flex items-center justify-center">
-                    <h2 className="text-7xl font-jockey text-secondary/60">
+                    <h2 className="text-2xl sm:text-3xl md:text-5xl xl:text-7xl font-jockey text-secondary/60">
                         provide your feedback
                     </h2>
                 </div>
@@ -25,7 +25,7 @@ const FeedbackCard = (props: Props) => {
                                 placeholder="this dojo is enlightening"
                             />
                             <div className="w-40 h-10 bg-primary flex items-center justify-center gap-2 cursor-pointer">
-                                <h5 className="text-3xl font-jockey text-accent">
+                                <h5 className="text-md md:text-3xl font-jockey text-accent">
                                     Send
                                 </h5>
                                 <Image

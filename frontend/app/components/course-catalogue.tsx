@@ -11,7 +11,7 @@ type Props = {
 
 const CourseCatalogue = ({ title, childType, children }: Props) => {
     return (
-        <div className="w-full flex flex-col px-5 gap-10">
+        <div className="w-full max-w-3xl lg:max-w-6xl flex flex-col px-5 gap-10">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="font-geist font-semibold text-3xl text-shadow-md text-black/60 shadow-black/80">
@@ -26,8 +26,10 @@ const CourseCatalogue = ({ title, childType, children }: Props) => {
                 </div>
             </div>
             <div
-                className={`grid ${
-                    childType === "CourseCard" ? "grid-cols-3" : "grid-cols-5"
+                className={`grid grid-cols-1 md:grid-cols-2 ${
+                    childType === "CourseCard"
+                        ? "lg:grid-cols-3"
+                        : "lg:grid-cols-5"
                 } gap-5`}
             >
                 {children}

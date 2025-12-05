@@ -36,10 +36,10 @@ export default function RootLayout({
                 <link rel="icon" href="favicon.ico" sizes="any" />
             </head>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${jockeyOne.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${jockeyOne.variable} antialiased min-h-screen overflow-x-hidden`}
             >
                 <div
-                    className="flex flex-col items-center"
+                    className="flex min-h-screen w-full flex-col items-center"
                     style={{
                         background: `
                             radial-gradient(circle at 1px 1px, rgba(34, 34, 34, 0.10) 1px, transparent 0),

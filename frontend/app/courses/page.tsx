@@ -9,7 +9,7 @@ type Props = {};
 
 const Courses = (props: Props) => {
     return (
-        <div className="w-full max-w-6xl border-x border-outline/5 flex flex-col items-center gap-20">
+        <div className="w-full md:max-w-6xl border-x border-outline/5 flex flex-col gap-20">
             <Heading
                 subtitle="What are you going to learn today"
                 title="Good Morning, Jimmy"

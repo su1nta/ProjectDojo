@@ -29,7 +29,7 @@ const Nav = (props: Props) => {
                     Blog
                 </Link>
             </div>
-            <div className="p-3 flex gap-2">
+            <div className="p-3 flex gap-2 md:opacity-100">
                 <Link
                     href=""
                     className="py-2 px-6 bg-accent hover:bg-accent/80 transition duration-200"
