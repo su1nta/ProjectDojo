@@ -14,13 +14,13 @@ type Props = {
 const UserCounseCatalogue = ({ children }: Props) => {
     return (
         <div className="w-full flex flex-col px-5 gap-10">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                    <h2 className="font-geist font-semibold text-3xl text-shadow-md text-black/60 shadow-black/80">
+                    <h2 className="font-geist font-semibold text-2xl sm:text-3xl text-shadow-md text-black/60 shadow-black/80">
                         Your Dojo
                     </h2>
                 </div>
-                <div className="relative flex items-center w-1/3 h-7">
+                <div className="relative flex items-center w-full h-10 sm:h-9 sm:w-2/3 lg:w-1/3">
                     <Image
                         src={IconSearch}
                         alt="Search"
@@ -32,19 +32,23 @@ const UserCounseCatalogue = ({ children }: Props) => {
                         placeholder="search"
                     />
                 </div>
-                <div className="flex items-end justify-center gap-x-3">
-                    <span className="p-px bg-accent border border-outline/10 cursor-pointer">
+                <div className="flex flex-wrap items-end justify-start gap-x-3 gap-y-2 lg:justify-center">
+                    <span className="p-px bg-accent border border-outline/10 cursor-pointer flex">
                         <Image src={IconBookmark} alt="Bookmark" />
                     </span>
-                    <span className="p-px bg-accent border border-outline/10 cursor-pointer">
-                        <Image src={IconSort} alt="Bookmark" />
+                    <span className="p-px bg-accent border border-outline/10 cursor-pointer flex">
+                        <Image src={IconSort} alt="Sort" />
                     </span>
-                    <span className="p-px bg-accent border border-outline/10 cursor-pointer">
-                        <Image src={IconFilter} alt="Bookmark" />
+                    <span className="p-px bg-accent border border-outline/10 cursor-pointer flex">
+                        <Image src={IconFilter} alt="Filter" />
                     </span>
                 </div>
             </div>
-            <div className={`grid grid-cols-3 gap-5`}>{children}</div>
+            <div
+                className={`grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3`}
+            >
+                {children}
+            </div>
         </div>
     );
 };

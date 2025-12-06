@@ -8,6 +8,11 @@
     --accent: #d2dcb6;
     --background: #f2f5e1;
     --outline: #222222;
+
+    /* breakpoints */
+    --xs: "425px";
+    --2xs: "375px";
+    --3xs: "320px";
 }
 
 @theme inline {
@@ -21,4 +26,9 @@
     --color-accent: var(--accent);
     --color-background: var(--background);
     --color-outline: var(--outline);
+
+    /* custom breakpoints */
+    --breakpoint-xs: var(--xs);
+    --breakpoint-2xs: var(--2xs);
+    --breakpoint-3xs: var(--3xs);
 }

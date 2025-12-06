@@ -10,21 +10,21 @@ type Props = {};
 const FeedbackCard = (props: Props) => {
     return (
         <div className=" w-full bg-zinc-100/20 h-160 flex items-center justify-center">
-            <div className="h-3/5 w-3/5 border border-secondary">
+            <div className="h-3/5 w-full md:w-3/5 border border-secondary">
                 <div className="h-1/4 bg-accent/50 flex items-center justify-center">
-                    <h2 className="text-2xl sm:text-3xl md:text-5xl xl:text-7xl font-jockey text-secondary/60">
+                    <h2 className="text-5xl xl:text-7xl font-jockey text-secondary/60">
                         provide your feedback
                     </h2>
                 </div>
                 <div className="h-3/4">
                     <div className="h-3/5 flex items-center justify-center">
-                        <div className="w-4/5 h-10 flex items-center justify-center">
+                        <div className="w-4/5 flex flex-col gap-4 md:gap-0 md:flex-row items-center justify-center">
                             <input
                                 type="text"
-                                className="w-100 h-10 border border-primary focus:ring-1 focus:ring-secondary outline-none px-3 caret-primary placeholder:text-primary"
+                                className="w-full md:w-100 h-12 md:h-10 border border-primary focus:ring-1 focus:ring-secondary outline-none px-3 caret-primary placeholder:text-primary placeholder:text-sm"
                                 placeholder="this dojo is enlightening"
                             />
-                            <div className="w-40 h-10 bg-primary flex items-center justify-center gap-2 cursor-pointer">
+                            <div className="w-2/5 md:w-40 h-12 md:h-10 bg-primary flex items-center justify-center gap-2 cursor-pointer">
                                 <h5 className="text-md md:text-3xl font-jockey text-accent">
                                     Send
                                 </h5>
